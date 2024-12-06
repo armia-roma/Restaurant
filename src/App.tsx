@@ -1,35 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import ItemCard from "./components/ItemCard";
+import ItemListPage from "./pages/ItemListPage";
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	const cards = [
+		{id: 1, title: "Card 1", content: "This is the first card."},
+		{id: 2, title: "Card 2", content: "This is the second card."},
+		{id: 3, title: "Card 3", content: "This is the third card."},
+		{id: 4, title: "Card 4", content: "This is the fourth card."},
+	];
+	return (
+		<>
+			<ItemListPage></ItemListPage>
+			<div className="bg-gray-50 flex flex-col items-center">
+				<div className="container p-4">
+					{cards.map((card) => (
+						<ItemCard></ItemCard>
+					))}
+				</div>
+			</div>
+		</>
+	);
 }
 
-export default App
+export default App;
