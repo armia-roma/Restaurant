@@ -1,11 +1,17 @@
 import {useState} from "react";
-import ItemCategorieBanar from "../components/ItemCategorieBanar";
-import Nav from "../components/Nav";
+import ItemCategoryBanner from "../components/ItemCategoryBanner";
 import Items from ".././Items.json";
 import ItemCard from "../components/ItemCard";
 import OrderSummaryCard from "./../components/OrderSummaryCard";
+import ItemDetails from "../components/ItemDetails";
 
 export default function ItemListPage() {
+	const [isModalVisible, setModalVisible] = useState(false);
+
+	const openModal = () => setModalVisible(true);
+
+	const closeModal = () => setModalVisible(false);
+
 	const data = Items.data;
 	const categories = [
 		{
@@ -94,21 +100,22 @@ export default function ItemListPage() {
 	const [selected, setSelected] = useState<string | number>();
 	return (
 		<>
-			<Nav></Nav>
 			<div className="flex gap-3 p-4 overflow-scroll scrollbar-hide">
-				{categories.map((categorie) => (
-					<ItemCategorieBanar
-						isSelect={categorie.id === selected}
-						title={categorie.display_name}
-						categorieId={categorie.id}
-						onClick={(categorieId) => setSelected(categorieId)}
-					></ItemCategorieBanar>
+				{categories.map((category) => (
+					<ItemCategoryBanner
+						isSelect={category.id === selected}
+						title={category.display_name}
+						categoryId={category.id}
+						onClick={(categoryId) => setSelected(categoryId)}
+					/>
 				))}
 			</div>
 			<div className="bg-gray-50 flex flex-col items-center">
 				<div className="container p-4">
 					{data.map((item) => (
 						<ItemCard
+							onClick={openModal}
+							id={item.id}
 							image={item.image}
 							title={item.display_name}
 							price={item.price}
@@ -118,6 +125,7 @@ export default function ItemListPage() {
 				</div>
 			</div>
 			<OrderSummaryCard />
+			<ItemDetails isVisible={isModalVisible} onClose={closeModal} />
 		</>
 	);
 }
