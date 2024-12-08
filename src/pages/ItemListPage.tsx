@@ -127,7 +127,8 @@ export default function ItemListPage() {
 		fetchCategories().then(() => fetchItems());
 	}, []);
 
-	const openModal = () => {
+	const openModal = (item: Item) => {
+		setSelectedItem(item);
 		setModalVisible(true);
 	};
 
