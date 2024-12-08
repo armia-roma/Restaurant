@@ -178,17 +178,23 @@ export default function ItemListPage() {
 			</div>
 			<div className="bg-gray-50 flex flex-col items-center">
 				<div className="container p-4">
-					{isLoading
-						? Array.from({length: 5}, (_, index) => (
-								<ItemCardSkeletonLoader key={index} />
-						  ))
-						: items.map((item) => (
-								<ItemCard
-									key={item.id}
-									onClick={openModal}
-									item={item}
-								></ItemCard>
-						  ))}
+					{isLoading ? (
+						Array.from({length: 5}, (_, index) => (
+							<ItemCardSkeletonLoader key={index} />
+						))
+					) : items.length === 0 ? (
+						<div className="text-center text-lg text-gray-500">
+							No items available in this category.
+						</div>
+					) : (
+						items.map((item) => (
+							<ItemCard
+								key={item.id}
+								onClick={openModal}
+								item={item}
+							></ItemCard>
+						))
+					)}
 				</div>
 			</div>
 			<OrderSummaryCard />
