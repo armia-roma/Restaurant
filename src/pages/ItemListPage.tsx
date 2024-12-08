@@ -1,18 +1,83 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ItemCategoryBanner from "../components/ItemCategoryBanner";
-import Items from ".././Items.json";
 import ItemCard from "../components/ItemCard";
 import OrderSummaryCard from "./../components/OrderSummaryCard";
-import ItemDetails from "../components/ItemDetails";
+import ItemDetailPage from "./ItemDetailPage";
+import axios from "axios";
+import ItemCardSkeletonLoader from "../components/ItemCardSkeletonLoader";
+import ErrorNotification from "../components/ErrorNotification";
+import ErrorMessage from "../components/ErrorMessage";
+export interface Option {
+	id: number;
+	name: string;
+	option_has_price: boolean;
+	currency: string;
+	price: number;
+}
 
+export interface ExtraWithOption {
+	is_active: number;
+	name: string;
+	max_options: number;
+	extra_type_name: "radio" | "checkbox";
+	is_required: number;
+	extra_id: number;
+	option: Option[];
+}
+export interface Item {
+	id: number;
+	image: string;
+	price: number;
+	name: string;
+	display_name: string;
+	description: string;
+	extrasWithOptions: ExtraWithOption[];
+}
 export default function ItemListPage() {
+	const [items, setItems] = useState<Item[]>([]);
+	const [error, setError] = useState({message: "", visible: false});
 	const [isModalVisible, setModalVisible] = useState(false);
 
-	const openModal = () => setModalVisible(true);
+	const [selectedItem, setSelectedItem] = useState<Item>();
+
+	const openModal = (item: Item) => {
+		setModalVisible(true);
+		setSelectedItem(item);
+	};
 
 	const closeModal = () => setModalVisible(false);
+	const [selectedCategory, setSelectedCategory] = useState<string | number>();
 
-	const data = Items.data;
+	const fetchItem = () => {
+		axios
+			.get(
+				"https://stg.tdh.start-tech.ae/api/8661e1bc-87d4-11ef-ba55-0050563f7167/restaurant/2da6c53a-522d-485d-b77c-2fafd601ff0c?cat=3408"
+			)
+			.then((response) => {
+				setItems(response.data.data.items.data);
+				setError({message: "", visible: false});
+			})
+			.catch((error) => {
+				if (error.response) {
+					setError({
+						message:
+							error.response.data.message ||
+							"Something went wrong!",
+						visible: true,
+					});
+				} else if (error.request) {
+					setError({
+						message:
+							"  message: 'Oops! It seems like we didn’t get a response from the server. Please try again later.",
+						visible: true,
+					});
+				}
+			});
+	};
+	useEffect(() => {
+		fetchItem();
+	}, []);
+
 	const categories = [
 		{
 			id: 3449,
@@ -96,36 +161,51 @@ export default function ItemListPage() {
 			count_sub_categories: 0,
 		},
 	];
-
-	const [selected, setSelected] = useState<string | number>();
+	if (error.visible) {
+		return <ErrorMessage error={error} retry={() => fetchItem()} />;
+	}
 	return (
 		<>
+			{error.visible && (
+				<ErrorNotification
+					message={error.message}
+					onClose={() => setError({...error, visible: false})}
+				/>
+			)}
 			<div className="flex gap-3 p-4 overflow-scroll scrollbar-hide">
 				{categories.map((category) => (
 					<ItemCategoryBanner
-						isSelect={category.id === selected}
+						key={category.id}
+						isSelected={category.id === selectedCategory}
 						title={category.display_name}
 						categoryId={category.id}
-						onClick={(categoryId) => setSelected(categoryId)}
+						onClick={(categoryId) =>
+							setSelectedCategory(categoryId)
+						}
 					/>
 				))}
 			</div>
 			<div className="bg-gray-50 flex flex-col items-center">
 				<div className="container p-4">
-					{data.map((item) => (
-						<ItemCard
-							onClick={openModal}
-							id={item.id}
-							image={item.image}
-							title={item.display_name}
-							price={item.price}
-							description={item.description}
-						></ItemCard>
-					))}
+					{items.length === 0
+						? Array.from({length: 5}, (_, index) => (
+								<ItemCardSkeletonLoader key={index} />
+						  ))
+						: items.map((item) => (
+								<ItemCard
+									key={item.id}
+									onClick={openModal}
+									item={item}
+								></ItemCard>
+						  ))}
 				</div>
 			</div>
 			<OrderSummaryCard />
-			<ItemDetails isVisible={isModalVisible} onClose={closeModal} />
+			<ItemDetailPage
+				isVisible={isModalVisible}
+				onClose={closeModal}
+				item={selectedItem}
+			/>
 		</>
 	);
 }
