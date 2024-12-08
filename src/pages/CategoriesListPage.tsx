@@ -119,7 +119,7 @@ export default function CategoriesListPage() {
 
 			<div className="flex flex-wrap">
 				{filterList?.map((category) => (
-					<CategoryCard category={category} />
+					<CategoryCard category={category} key={category.id} />
 				))}
 			</div>
 		</div>
