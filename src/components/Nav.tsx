@@ -1,12 +1,19 @@
 import {FaCartShopping} from "react-icons/fa6";
 import {MdArrowBackIos} from "react-icons/md";
-
+import {useNavigate} from "react-router-dom";
 export default function Nav() {
+	const navigate = useNavigate();
+	const handleBackClick = () => {
+		navigate(-1); // This goes back to the previous page in history
+	};
 	return (
 		<div className="bg-gray-200 p-4">
 			<div className="flex justify-between items-center">
 				<div className="flex items-center space-x-2">
-					<button className=" text-indigo-900  flex items-center space-x-1 border">
+					<button
+						onClick={handleBackClick}
+						className=" text-indigo-900  flex items-center space-x-1 border"
+					>
 						<MdArrowBackIos />
 
 						<span>Back</span>
