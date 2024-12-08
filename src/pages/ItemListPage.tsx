@@ -158,17 +158,23 @@ export default function ItemListPage() {
 				/>
 			)}
 			<div className="flex gap-3 p-4 overflow-scroll scrollbar-hide">
-				{categories.map((category) => (
-					<ItemCategoryBanner
-						key={category.id}
-						isSelected={category.id === selectedCategory}
-						title={category.display_name}
-						categoryId={category.id}
-						onClick={(categoryId) =>
-							handleCategoryClick(categoryId)
-						}
-					/>
-				))}
+				{categories.length === 0 ? (
+					<div className="text-center text-lg text-gray-500">
+						No categories available.
+					</div>
+				) : (
+					categories.map((category) => (
+						<ItemCategoryBanner
+							key={category.id}
+							isSelected={category.id === selectedCategory}
+							title={category.display_name}
+							categoryId={category.id}
+							onClick={(categoryId) =>
+								handleCategoryClick(categoryId)
+							}
+						/>
+					))
+				)}
 			</div>
 			<div className="bg-gray-50 flex flex-col items-center">
 				<div className="container p-4">
