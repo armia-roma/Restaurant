@@ -1,3 +1,4 @@
+import {useState} from "react";
 import {ExtraWithOption} from "../pages/ItemListPage";
 
 interface Props {
@@ -5,6 +6,7 @@ interface Props {
 	option: Option;
 	optionType: "checkbox" | "radio";
 	isRequired: boolean | number;
+	onSelect?: (option: Option) => void;
 }
 
 interface Option {
@@ -20,7 +22,19 @@ export default function ExtraOptionItem({
 	option,
 	optionType,
 	isRequired,
+	onSelect,
 }: Props) {
+	const [isSelected, setIsSelected] = useState(false);
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const isChecked = e.target.checked;
+
+		setIsSelected(isChecked);
+
+		if (isChecked && onSelect) {
+			onSelect(option);
+		}
+	};
 	return (
 		<div className="flex items-center justify-between p-2">
 			<p className="text-base font-medium text-gray-700 ">
@@ -37,7 +51,9 @@ export default function ExtraOptionItem({
 					type={optionType}
 					value={option.id}
 					name={extraOptionDetails.extra_id.toString()}
+					checked={isSelected}
 					required={!!isRequired}
+					onChange={handleInputChange}
 					className="w-5 h-5 border border-gray-900"
 				/>
 			</div>
