@@ -12,7 +12,7 @@ export default function Nav() {
 				<div className="flex items-center space-x-2">
 					<button
 						onClick={handleBackClick}
-						className=" text-indigo-900  flex items-center space-x-1 border"
+						className=" text-blue-900  flex items-center space-x-1 border"
 					>
 						<MdArrowBackIos />
 
@@ -20,15 +20,15 @@ export default function Nav() {
 					</button>
 				</div>
 
-				<div className="text-lg  text-indigo-900 font-semibold">
+				<div className="text-lg  text-blue-900 font-semibold">
 					<h1>In Room Dining</h1>
 				</div>
 
 				<div className="relative inline-block">
-					<span className="absolute -top-3 -right-2 text-white bg-indigo-900 texblackt-xs text-[13px] rounded-full w-4 h-4 flex items-center justify-center">
+					<span className="absolute -top-3 -right-2 text-white bg-blue-900 text-xs text-[13px] rounded-full w-4 h-4 flex items-center justify-center">
 						3
 					</span>
-					<div className=" text-indigo-900">
+					<div className=" text-blue-900">
 						<FaCartShopping />
 					</div>
 				</div>
