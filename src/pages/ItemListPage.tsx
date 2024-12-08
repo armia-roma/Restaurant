@@ -6,7 +6,7 @@ import ItemDetailPage from "./ItemDetailPage";
 import ItemCardSkeletonLoader from "../components/ItemCardSkeletonLoader";
 import ErrorNotification from "../components/ErrorNotification";
 import ErrorMessage from "../components/ErrorMessage";
-import apiClient, {RESTAURANT_ID, addToCart} from "../services/api-client";
+import apiClient, {RESTAURANT_ID} from "../services/api-client";
 
 export interface Option {
 	id: number;
@@ -66,6 +66,7 @@ export default function ItemListPage() {
 	};
 
 	const fetchCategories = () => {
+		setIsLoading(true);
 		return apiClient
 			.get(`/restaurant/categories/${RESTAURANT_ID}`)
 			.then((response) => {
@@ -89,10 +90,12 @@ export default function ItemListPage() {
 						visible: true,
 					});
 				}
-			});
+			})
+			.finally(() => setIsLoading(false));
 	};
 
 	const fetchItems = (categoryId?: number | string) => {
+		setIsLoading(true);
 		apiClient
 			.get(`/restaurant/${RESTAURANT_ID}`, {
 				params: categoryId ? {cat: categoryId} : {},
@@ -116,7 +119,8 @@ export default function ItemListPage() {
 						visible: true,
 					});
 				}
-			});
+			})
+			.finally(() => setIsLoading(false));
 	};
 
 	useEffect(() => {
