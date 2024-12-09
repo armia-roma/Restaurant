@@ -3,6 +3,8 @@ import ExtraOption from "../components/ExtraOption";
 import {RiCloseCircleLine} from "react-icons/ri";
 import {useState} from "react";
 import {FormProvider} from "./../contexts/FormContext";
+import ItemQuantity from "../components/ItemQuantity";
+import AddToCard from "../components/AddToCard";
 interface Props {
 	isVisible: boolean;
 	onClose: () => void;
@@ -53,22 +55,12 @@ export default function ItemDetailPage({isVisible, onClose, item}: Props) {
 							<p className="text-sm">{item.description}</p>
 						</div>
 						{/* item quantity  */}
-						<div className="flex items-center justify-between mb-2 px-3">
-							<div className="text-sm font-semibold">
-								AED {item.price}
-							</div>
-							<div className="flex item-center justify-center border border-blue-900 ">
-								<button className="px-3 py-1 text-blue-900">
-									-
-								</button>
-								<p className="flex justify-center items-center px-4 w-12 text-blue-900 text-center">
-									1
-								</p>
-								<button className="px-3 py-1 text-blue-900">
-									+
-								</button>
-							</div>
-						</div>
+						<ItemQuantity
+							item={item}
+							onQuantityChange={(quantity) =>
+								console.log(quantity)
+							}
+						/>
 						{/* option */}
 						<div>
 							{item.extrasWithOptions.map((extraOption) => (
@@ -85,17 +77,7 @@ export default function ItemDetailPage({isVisible, onClose, item}: Props) {
 							))}
 						</div>
 						{/* Add to cart */}
-						<div className="flex justify-between items-center px-4 mt-2 bg-blue-900 rounded-xl cursor-pointer">
-							<div className="flex justify-center align-center space-x-4 p-2 ">
-								<div className="bg-gray-200 text-blue-900 flex justify-center align-center w-4 text-center rounded-sm">
-									+
-								</div>
-								<p className="text-md text-white">
-									"Add to Cart"
-								</p>
-							</div>
-							<div className="text-white">AED 234</div>
-						</div>
+						<AddToCard AddToCard={() => console.log()} />
 					</div>
 				</div>
 			</div>
