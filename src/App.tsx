@@ -1,22 +1,20 @@
-import ItemCard from "./components/ItemCard";
-import ItemListPage from "./pages/ItemListPage";
+import {Link, Outlet} from "react-router-dom";
+import Nav from "./components/Nav";
+
 function App() {
-	const cards = [
-		{id: 1, title: "Card 1", content: "This is the first card."},
-		{id: 2, title: "Card 2", content: "This is the second card."},
-		{id: 3, title: "Card 3", content: "This is the third card."},
-		{id: 4, title: "Card 4", content: "This is the fourth card."},
-	];
 	return (
 		<>
-			<ItemListPage></ItemListPage>
-			<div className="bg-gray-50 flex flex-col items-center">
-				<div className="container p-4">
-					{cards.map((card) => (
-						<ItemCard></ItemCard>
-					))}
+			<Nav></Nav>
+			<Link
+				to="/categories"
+				className="flex items-center justify-center text-white mt-10 hover:translate-x-1"
+			>
+				<div className="w-1/2 h-48 bg-blue-900 flex items-center justify-center text-white rounded cursor-pointer">
+					<h1 className="text-4xl md:text-6xl font-bold">
+						Categories
+					</h1>
 				</div>
-			</div>
+			</Link>
 		</>
 	);
 }
