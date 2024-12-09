@@ -4,6 +4,7 @@ import Fuse from "fuse.js";
 import CategoryCard from "../components/CategoryCard";
 import {RESTAURANT_ID} from "../services/api-client";
 import {fetchCategories} from "../services/categoriesService";
+import CategorySkeletonLoader from "./../components/CategorySkeletonLoader";
 export interface Category {
 	id: number;
 	name: string;
@@ -59,9 +60,19 @@ export default function CategoriesListPage() {
 			</div>
 
 			<div className="flex flex-wrap">
-				{filterList?.map((category) => (
-					<CategoryCard category={category} key={category.id} />
-				))}
+				{isLoading ? (
+					Array.from({length: 6}, (_, index) => (
+						<CategorySkeletonLoader key={index} />
+					))
+				) : categories.length === 0 ? (
+					<div className="text-center text-lg text-gray-500">
+						No items available in this category.
+					</div>
+				) : (
+					filterList?.map((category) => (
+						<CategoryCard category={category} key={category.id} />
+					))
+				)}
 			</div>
 		</div>
 	);
