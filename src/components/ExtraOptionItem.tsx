@@ -1,12 +1,12 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {ExtraWithOption} from "../pages/ItemListPage";
+import {useFormContext} from "./../contexts/FormContext";
 
 interface Props {
 	extraOptionDetails: ExtraWithOption;
 	option: Option;
 	optionType: "checkbox" | "radio";
 	isRequired: boolean | number;
-	onSelect?: (option: Option) => void;
 }
 
 interface Option {
@@ -22,17 +22,53 @@ export default function ExtraOptionItem({
 	option,
 	optionType,
 	isRequired,
-	onSelect,
 }: Props) {
-	const [isSelected, setIsSelected] = useState(false);
+	const ExtraId = extraOptionDetails.extra_id;
+
+	const {form, updateForm} = useFormContext();
+
+	const isChecked = form.extras.some(
+		(extra) => extra.extra_id === ExtraId && extra.option_id === option.id
+	);
+	const [isSelected, setIsSelected] = useState(isChecked);
+
+	useEffect(() => {
+		setIsSelected(isChecked);
+	}, [form.extras, ExtraId, option.id]);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const isChecked = e.target.checked;
-
 		setIsSelected(isChecked);
 
-		if (isChecked && onSelect) {
-			onSelect(option);
+		if (optionType === "radio") {
+			const updatedExtras = form.extras.filter(
+				(extra) => extra.extra_id !== ExtraId
+			);
+			if (isChecked) {
+				updatedExtras.push({
+					extra_id: ExtraId,
+					option_id: option.id as number,
+				});
+			}
+			updateForm({extras: updatedExtras});
+		}
+
+		if (optionType === "checkbox") {
+			const updatedExtras = [...form.extras];
+			const existingIndex = updatedExtras.findIndex(
+				(extra) =>
+					extra.extra_id === ExtraId && extra.option_id === option.id
+			);
+
+			if (isChecked && existingIndex === -1) {
+				updatedExtras.push({
+					extra_id: ExtraId,
+					option_id: option.id as number,
+				});
+			} else if (!isChecked && existingIndex !== -1) {
+				updatedExtras.splice(existingIndex, 1);
+			}
+			updateForm({extras: updatedExtras});
 		}
 	};
 	return (
