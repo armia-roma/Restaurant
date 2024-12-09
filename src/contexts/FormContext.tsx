@@ -13,7 +13,7 @@ type Form = {
 const defaultForm: Form = {
 	restaurant_id: null,
 	item_id: null,
-	quantity: null,
+	quantity: 1,
 	extras: [],
 };
 
