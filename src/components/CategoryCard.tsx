@@ -1,10 +1,20 @@
+import {useNavigate} from "react-router-dom";
 import {Category} from "../pages/CategoriesListPage";
 interface Props {
 	category: Category;
 }
 export default function CategoryCard({category}: Props) {
+	const navigate = useNavigate();
+
+	const handleClick = () => {
+		navigate(`/items/${category.id}`);
+	};
 	return (
-		<div className="p-2 w-1/2 relative" key={category.id}>
+		<div
+			className="p-2 w-1/2 relative"
+			key={category.id}
+			onClick={handleClick}
+		>
 			<div className="bg-white rounded-lg shadow-md overflow-hidden w-full h-40 md:h-80 relative">
 				<img
 					src={category.image}
