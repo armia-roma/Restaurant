@@ -4,11 +4,10 @@ import ItemCard from "../components/ItemCard";
 import OrderSummaryCard from "./../components/OrderSummaryCard";
 import ItemDetailPage from "./ItemDetailPage";
 import ItemCardSkeletonLoader from "../components/ItemCardSkeletonLoader";
-import Notification from "../components/Notification";
 import ErrorMessage from "../components/ErrorMessage";
 import {handleApiError} from "./../utilits/errorHandler";
 import apiClient, {RESTAURANT_ID} from "../services/api-client";
-import JsonItems from "./../item.json";
+import {useParams} from "react-router-dom";
 
 export interface Option {
 	id: number | string;
@@ -51,6 +50,7 @@ export interface Category {
 export const allCategoryId = "all";
 
 export default function ItemListPage() {
+	const {CategoryId} = useParams();
 	const [items, setItems] = useState<Item[]>([]);
 	const [error, setError] = useState({message: "", visible: false, type: ""});
 	const [isModalVisible, setModalVisible] = useState(false);
@@ -119,7 +119,7 @@ export default function ItemListPage() {
 	};
 
 	useEffect(() => {
-		fetchCategories().then(() => fetchItems());
+		fetchCategories().then(() => fetchItems(CategoryId));
 	}, []);
 
 	const openModal = (item: Item) => {
