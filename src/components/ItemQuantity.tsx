@@ -1,18 +1,17 @@
-import {useState} from "react";
 import {Item} from "../pages/ItemListPage";
+import {useFormContext} from "./../contexts/FormContext";
+
 interface Props {
 	item: Item;
-	onQuantityChange: (quantity: number) => void;
 }
-export default function ItemQuantity({item, onQuantityChange}: Props) {
-	const [quantity, setQuantity] = useState<number>(1);
+export default function ItemQuantity({item}: Props) {
+	const {form, updateForm} = useFormContext();
 
 	const handleQuantityChange = (delta: number) => {
-		const newQuantity = quantity + delta;
+		const newQuantity = (form.quantity || 1) + delta;
 		if (newQuantity >= 1) {
-			setQuantity(newQuantity);
+			updateForm({quantity: newQuantity});
 		}
-		onQuantityChange(quantity);
 	};
 
 	return (
@@ -26,7 +25,7 @@ export default function ItemQuantity({item, onQuantityChange}: Props) {
 					-
 				</button>
 				<p className="flex justify-center items-center px-4 w-12 text-blue-900 text-center">
-					{quantity}
+					{form.quantity}
 				</p>
 				<button
 					className="px-3 py-1 text-blue-900"
