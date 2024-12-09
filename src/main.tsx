@@ -2,6 +2,7 @@ import {StrictMode} from "react";
 import {createRoot} from "react-dom/client";
 import "./index.css";
 import Template from "./components/Template";
+import {FormProvider} from "./contexts/FormContext.tsx";
 
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import CategoriesListPage from "./pages/CategoriesListPage.tsx";
@@ -31,6 +32,8 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<RouterProvider router={router} />
+		<FormProvider>
+			<RouterProvider router={router} />
+		</FormProvider>
 	</StrictMode>
 );
