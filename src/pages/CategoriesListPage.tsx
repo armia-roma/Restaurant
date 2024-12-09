@@ -64,9 +64,11 @@ export default function CategoriesListPage() {
 					Array.from({length: 6}, (_, index) => (
 						<CategorySkeletonLoader key={index} />
 					))
-				) : categories.length === 0 ? (
-					<div className="text-center text-lg text-gray-500">
-						No items available in this category.
+				) : categories.length == 0 ? (
+					<div className="bg-gray-50 flex justify-center items-center h-full w-full">
+						<div className="text-center text-lg text-gray-500">
+							No categories available.
+						</div>
 					</div>
 				) : (
 					filterList?.map((category) => (
