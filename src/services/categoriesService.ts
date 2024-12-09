@@ -1,8 +1,9 @@
+import {Category} from "../pages/CategoriesListPage";
 import apiClient from "./api-client";
 
 export const fetchCategories = async (
 	restaurantId: number | string
-): Promise<any[]> => {
+): Promise<Category[]> => {
 	try {
 		const response = await apiClient.get(
 			`/restaurant/categories/${restaurantId}`
