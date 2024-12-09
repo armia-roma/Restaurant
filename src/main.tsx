@@ -13,7 +13,7 @@ const router = createBrowserRouter([
 		element: <App></App>,
 	},
 	{
-		path: "/items",
+		path: "/items/:CategoryId",
 		element: (
 			<Template>
 				<ItemListPage />,
