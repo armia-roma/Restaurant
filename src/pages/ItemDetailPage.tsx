@@ -55,12 +55,7 @@ export default function ItemDetailPage({isVisible, onClose, item}: Props) {
 							<p className="text-sm">{item.description}</p>
 						</div>
 						{/* item quantity  */}
-						<ItemQuantity
-							item={item}
-							onQuantityChange={(quantity) =>
-								console.log(quantity)
-							}
-						/>
+						<ItemQuantity item={item} />
 						{/* option */}
 						<div>
 							{item.extrasWithOptions.map((extraOption) => (
