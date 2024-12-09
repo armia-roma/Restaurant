@@ -1,16 +1,10 @@
-import {ExtraWithOption, Option} from "../pages/ItemListPage";
+import {ExtraWithOption} from "../pages/ItemListPage";
 import ExtraOptionItem from "./ExtraOptionItem";
 
 interface Props {
 	extraOption: ExtraWithOption;
-	onOptionChosen?: (option: Option) => void;
 }
-export default function ExtraOption({extraOption, onOptionChosen}: Props) {
-	const handleOptionSelect = (option: Option) => {
-		if (onOptionChosen) {
-			onOptionChosen(option);
-		}
-	};
+export default function ExtraOption({extraOption}: Props) {
 	return (
 		<div className="flex flex-col" key={extraOption.extra_id}>
 			<div className="flex justify-between items-center bg-gray-50 p-2 ">
@@ -26,7 +20,6 @@ export default function ExtraOption({extraOption, onOptionChosen}: Props) {
 					option={item}
 					optionType={extraOption.extra_type_name}
 					isRequired={extraOption.is_required}
-					onSelect={handleOptionSelect}
 				/>
 			))}
 		</div>
