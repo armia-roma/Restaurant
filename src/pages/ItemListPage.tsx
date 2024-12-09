@@ -4,12 +4,14 @@ import ItemCard from "../components/ItemCard";
 import OrderSummaryCard from "./../components/OrderSummaryCard";
 import ItemDetailPage from "./ItemDetailPage";
 import ItemCardSkeletonLoader from "../components/ItemCardSkeletonLoader";
-import ErrorNotification from "../components/ErrorNotification";
+import Notification from "../components/Notification";
 import ErrorMessage from "../components/ErrorMessage";
+import {handleApiError} from "./../utilits/errorHandler";
 import apiClient, {RESTAURANT_ID} from "../services/api-client";
+import JsonItems from "./../item.json";
 
 export interface Option {
-	id: number;
+	id: number | string;
 	name: string;
 	option_has_price: boolean;
 	currency: string;
@@ -50,7 +52,7 @@ export const allCategoryId = "all";
 
 export default function ItemListPage() {
 	const [items, setItems] = useState<Item[]>([]);
-	const [error, setError] = useState({message: "", visible: false});
+	const [error, setError] = useState({message: "", visible: false, type: ""});
 	const [isModalVisible, setModalVisible] = useState(false);
 
 	const [selectedItem, setSelectedItem] = useState<Item>();
@@ -58,6 +60,8 @@ export default function ItemListPage() {
 	const [categories, setCategories] = useState<Category[]>([]);
 
 	const [isLoading, setIsLoading] = useState(false);
+
+	const [isServerError, setServerError] = useState(false);
 
 	const allCategoryDetails = {
 		id: allCategoryId,
@@ -72,7 +76,7 @@ export default function ItemListPage() {
 			.then((response) => {
 				const categoryList = response.data.data.categories;
 				setCategories([allCategoryDetails, ...categoryList]);
-				setError({message: "", visible: false});
+				setError({message: "", visible: false, type: ""});
 				return categoryList;
 			})
 			.catch((error) => {
@@ -82,12 +86,14 @@ export default function ItemListPage() {
 							error.response.data.message ||
 							"Something went wrong!",
 						visible: true,
+						type: "",
 					});
 				} else if (error.request) {
 					setError({
 						message:
-							"  message: 'Oops! It seems like we didn’t get a response from the server. Please try again later.",
+							"'Oops! It seems like we didn’t get a response from the server. Please try again later.",
 						visible: true,
+						type: "",
 					});
 				}
 			})
@@ -102,23 +108,12 @@ export default function ItemListPage() {
 			})
 			.then((response) => {
 				setItems(response.data.data.items.data);
-				setError({message: "", visible: false});
+				setError({message: "", visible: false, type: ""});
 			})
-			.catch((error) => {
-				if (error.response) {
-					setError({
-						message:
-							error.response.data.message ||
-							"Something went wrong!",
-						visible: true,
-					});
-				} else if (error.request) {
-					setError({
-						message:
-							"  message: 'Oops! It seems like we didn’t get a response from the server. Please try again later.",
-						visible: true,
-					});
-				}
+			.catch((catchError) => {
+				const apiError = handleApiError(catchError);
+				setError(apiError);
+				if (apiError.type === "server") setServerError(true);
 			})
 			.finally(() => setIsLoading(false));
 	};
@@ -151,16 +146,12 @@ export default function ItemListPage() {
 	}
 	return (
 		<>
-			{error.visible && (
-				<ErrorNotification
-					message={error.message}
-					onClose={() => setError({...error, visible: false})}
-				/>
-			)}
 			<div className="flex gap-3 p-4 overflow-scroll scrollbar-hide">
 				{categories.length === 0 ? (
-					<div className="text-center text-lg text-gray-500">
-						No categories available.
+					<div className="bg-gray-50 flex justify-center items-center h-full w-full">
+						<div className="text-center text-lg text-gray-500">
+							No categories available.
+						</div>
 					</div>
 				) : (
 					categories.map((category) => (
