@@ -50,6 +50,7 @@ export interface Category {
 export interface Notification {
 	message: string;
 	visible: boolean;
+	color: string;
 }
 export const AllCategoryId = "all";
 
@@ -72,6 +73,7 @@ export default function ItemListPage() {
 	const [notification, setNotification] = useState<Notification>({
 		visible: false,
 		message: "",
+		color: "",
 	});
 	const [selectedItem, setSelectedItem] = useState<Item>();
 
@@ -120,9 +122,10 @@ export default function ItemListPage() {
 								setNotification({
 									...notification,
 									visible: false,
+									color: "",
 								})
 							}
-							color="bg-green-400"
+							color={notification.color}
 						/>
 					)}
 				</div>
