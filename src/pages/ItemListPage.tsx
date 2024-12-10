@@ -8,6 +8,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import {useParams} from "react-router-dom";
 import {useItems} from "../hooks/useItems";
 import {useCategories} from "../hooks/useCategories";
+import {ItemCategoryBannerSkeleton} from "../components/ItemCategoryBannerSkeleton";
 
 export interface Option {
 	id: number | string;
@@ -102,7 +103,11 @@ export default function ItemListPage() {
 	return (
 		<>
 			<div className="flex gap-3 p-4 overflow-scroll scrollbar-hide">
-				{categories.length === 0 ? (
+				{categoriesLoading ? (
+					Array.from({length: 5}, (_, index) => (
+						<ItemCategoryBannerSkeleton key={index} />
+					))
+				) : categories.length === 0 ? (
 					<div className="bg-gray-50 flex justify-center items-center h-full w-full">
 						<div className="text-center text-lg text-gray-500">
 							No categories available.
