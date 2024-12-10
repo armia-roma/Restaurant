@@ -1,3 +1,5 @@
+import {useEffect} from "react";
+
 interface Props {
 	message: string;
 	color?: string;
@@ -8,6 +10,11 @@ export default function ErrorNotification({
 	color = "bg-gray-600",
 	onClose,
 }: Props) {
+	useEffect(() => {
+		setTimeout(() => {
+			onClose();
+		}, 3000);
+	}, []);
 	return (
 		<div
 			className={`${color} text-white p-4 rounded-md flex items-center justify-between shadow-md max-w-md mx-auto mt-4`}
