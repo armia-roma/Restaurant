@@ -9,22 +9,24 @@ Follow these steps to get your project up and running:
 1. **Clone the repository**  
    First, clone this repository to your local machine:
 
-``````bash
+```bash
 git clone https://github.com/armia-roma/Restaurant.git
-
+```
 
 2. **Install dependencies:**
 
-`````bash
+```bash
 npm install
+```
 
 3. **Navigate to the project directory:**
 
-````bash
+```bash
 cd Restaurant
+```
 
 4. **Run the application: **
 
 ```bash
  npm run dev
-``````
+```
