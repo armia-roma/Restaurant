@@ -5,7 +5,7 @@ interface Props {
 }
 const Template = ({children}: Props) => {
 	return (
-		<div>
+		<div className="h-screen bg-gray-50">
 			<Nav />
 			<div>{children}</div>
 		</div>
