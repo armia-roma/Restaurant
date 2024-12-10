@@ -2,7 +2,6 @@ import {useEffect, useState, useContext} from "react";
 import apiClient, {RESTAURANT_ID} from "../services/api-client";
 import {handleApiError} from "../utilities/errorHandler";
 import {Item} from "../pages/ItemListPage";
-import {useFormContext} from "../contexts/FormContext";
 
 interface UseItemsReturn {
 	items: Item[];
@@ -15,7 +14,6 @@ export const useItems = (
 ): UseItemsReturn => {
 	const [items, setItems] = useState<Item[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
-	const {updateForm} = useFormContext();
 	const [error, setError] = useState({
 		message: "",
 		visible: false,
@@ -32,9 +30,7 @@ export const useItems = (
 				}
 			);
 			const {data} = response.data;
-			const {restaurant} = data.restaurant;
 			setItems(data.items.data);
-			updateForm({restaurant_id: restaurant.id});
 
 			setError({message: "", visible: false, type: ""});
 		} catch (catchError) {
