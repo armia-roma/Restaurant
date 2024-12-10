@@ -52,12 +52,13 @@ export const AllCategoryId = "all";
 
 export default function ItemListPage() {
 	const {CategoryId} = useParams();
+	console.log(CategoryId);
 	const {
 		items,
 		fetchItems,
 		isLoading: itemsLoading,
 		error: itemsError,
-	} = useItems(CategoryId);
+	} = useItems(Number(CategoryId));
 
 	const {
 		categories,
