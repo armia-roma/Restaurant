@@ -45,8 +45,25 @@ export default function ItemDetailPage({
 	useEffect(() => {
 		updateForm({item_id: item.id});
 		const basePrice = item.price * (form.quantity || 0);
-		setTotalPrice(basePrice);
-	}, []);
+		let totalExtrasPrice = 0;
+		form.extras.forEach((extra) => {
+			let matchingExtra = item.extrasWithOptions.find(
+				(extraOption) => extraOption.extra_id === extra.extraId
+			);
+
+			if (matchingExtra) {
+				let matchingOption = matchingExtra.option.find(
+					(option) => option.id === extra.optionid
+				);
+
+				if (matchingOption?.option_has_price) {
+					totalExtrasPrice += matchingOption.price;
+				}
+			}
+		});
+		const totalPrice = basePrice + totalExtrasPrice;
+		setTotalPrice(totalPrice);
+	}, [form.quantity]);
 
 	return (
 		<div className="fixed flex-col inset-0 bg-opacity-50 flex justify-center items-center">
