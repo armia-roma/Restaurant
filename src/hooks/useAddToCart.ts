@@ -5,22 +5,21 @@ import {addToCart} from "../utilities/addToCard";
 export function useAddToCart() {
 	const {form} = useFormContext();
 	const [error, setError] = useState("");
+
 	const [isLoading, setIsLoading] = useState(false);
-
 	const handleAddToCart = async () => {
-		setIsLoading(true);
-
 		if (!form.restaurant_id || !form.item_id || !form.quantity) {
 			throw new Error("Missing required fields.");
 		}
+		setIsLoading(true);
 		try {
-			await addToCart({
+			const response = await addToCart({
 				restaurant_id: form.restaurant_id.toString(),
 				item_id: form.item_id,
 				quantity: form.quantity,
 				extras: form.extras,
 			});
-			console.log("Item successfully added to cart!");
+			return response;
 		} catch (error: any) {
 			setError(
 				error.response?.data.message ||
