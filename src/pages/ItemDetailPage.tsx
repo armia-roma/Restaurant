@@ -1,35 +1,43 @@
-import {Item, Option} from "../pages/ItemListPage";
+import {Item} from "../pages/ItemListPage";
 import ExtraOption from "../components/ExtraOption";
 import {RiCloseCircleLine} from "react-icons/ri";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ItemQuantity from "../components/ItemQuantity";
 import AddToCard from "../components/AddToCard";
+import {useFormContext} from "../contexts/FormContext";
+import {useAddToCart} from "../hooks/useAddToCart";
+import Notification from "../components/Notification.tsx";
 interface Props {
 	isVisible: boolean;
 	onClose: () => void;
 	item?: Item;
-	restaurantId: number | string;
-}
-interface SelectedExtras {
-	extra_id: number;
-	option_id: number | string;
 }
 
 export default function ItemDetailPage({isVisible, onClose, item}: Props) {
 	if (!isVisible || !item) return null;
 
-	const [selectedExtras, setSelectedExtras] = useState<SelectedExtras[]>([]);
-
-	const handleExtraOptionSelect = (extra_id: number, option: Option) => {
-		setSelectedExtras((prev) => {
-			// Remove any existing selection for this extra
-			const filtered = prev.filter((e) => e.extra_id !== extra_id);
-			// Add the new selection
-			return [...filtered, {extra_id, option_id: option.id}];
-		});
+	const [totalPrice, setTotalPrice] = useState(item.price);
+	const {form, updateForm} = useFormContext();
+	const {handleAddToCart, isLoading, error} = useAddToCart();
+	const [notificationVisible, setNotificationVisible] = useState(false);
+	const handleAddToCartExecute = async () => {
+		handleAddToCart();
 	};
+	useEffect(() => {
+		updateForm({item_id: item.id});
+		const basePrice = item.price * (form.quantity || 0);
+		setTotalPrice(basePrice);
+	}, []);
+
 	return (
 		<div className="fixed inset-0 bg-opacity-50 flex justify-center items-center">
+			{notificationVisible && (
+				<Notification
+					message={error}
+					onClose={() => setNotificationVisible(false)}
+					color="bg-red-400"
+				/>
+			)}
 			<div className="bg-white rounded-lg w-11/12 md:w-2/3 p-2 relative max-h-[90vh] overflow-y-auto pb-8">
 				<div>
 					<button
@@ -51,25 +59,19 @@ export default function ItemDetailPage({isVisible, onClose, item}: Props) {
 						<h2 className="text-xl py-2">{item.display_name}</h2>
 						<p className="text-sm">{item.description}</p>
 					</div>
-					{/* item quantity  */}
 					<ItemQuantity item={item} />
-					{/* option */}
 					<div>
 						{item.extrasWithOptions.map((extraOption) => (
 							<ExtraOption
 								extraOption={extraOption}
 								key={extraOption.extra_id}
-								onOptionChosen={(option) =>
-									handleExtraOptionSelect(
-										extraOption.extra_id,
-										option
-									)
-								}
 							/>
 						))}
 					</div>
-					{/* Add to cart */}
-					<AddToCard AddToCard={() => console.log()} />
+					<AddToCard
+						totalPrice={totalPrice}
+						onAddToCard={handleAddToCartExecute}
+					/>
 				</div>
 			</div>
 		</div>
