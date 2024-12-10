@@ -6,8 +6,7 @@ interface Props {
 }
 
 export default function AddToCard({totalPrice, onAddToCard}: Props) {
-	const {handleAddToCart, isLoading, error} = useAddToCart();
-
+	const {isLoading} = useAddToCart();
 	return (
 		<div
 			className="flex justify-between items-center px-4 mt-2 bg-blue-900 rounded-xl cursor-pointer hover:scale-95 transition-transform duration-200"
