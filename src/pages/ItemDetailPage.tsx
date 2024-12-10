@@ -1,4 +1,4 @@
-import {Item} from "../pages/ItemListPage";
+import {Item, Notification as NotificationType} from "../pages/ItemListPage";
 import ExtraOption from "../components/ExtraOption";
 import {RiCloseCircleLine} from "react-icons/ri";
 import {useEffect, useState} from "react";
@@ -11,17 +11,36 @@ interface Props {
 	isVisible: boolean;
 	onClose: () => void;
 	item?: Item;
+	onAddToCart: (value: NotificationType) => void;
 }
 
-export default function ItemDetailPage({isVisible, onClose, item}: Props) {
+export default function ItemDetailPage({
+	isVisible,
+	onClose,
+	item,
+	onAddToCart,
+}: Props) {
 	if (!isVisible || !item) return null;
 
 	const [totalPrice, setTotalPrice] = useState(item.price);
 	const {form, updateForm} = useFormContext();
 	const {handleAddToCart, isLoading, error} = useAddToCart();
-	const [notificationVisible, setNotificationVisible] = useState(false);
+	const [notification, setNotification] = useState<NotificationType>({
+		visible: false,
+		message: "",
+		color: "",
+	});
 	const handleAddToCartExecute = async () => {
-		handleAddToCart();
+		try {
+			const response = await handleAddToCart();
+			onAddToCart({
+				message: "Item Added To Cart Successfuly",
+				visible: true,
+				color: "bg-green-400",
+			});
+		} catch (error) {
+			onAddToCart({message: error, visible: true});
+		}
 	};
 	useEffect(() => {
 		updateForm({item_id: item.id});
@@ -30,12 +49,18 @@ export default function ItemDetailPage({isVisible, onClose, item}: Props) {
 	}, []);
 
 	return (
-		<div className="fixed inset-0 bg-opacity-50 flex justify-center items-center">
-			{notificationVisible && (
+		<div className="fixed flex-col inset-0 bg-opacity-50 flex justify-center items-center">
+			{notification.visible && (
 				<Notification
-					message={error}
-					onClose={() => setNotificationVisible(false)}
-					color="bg-red-400"
+					message={notification.message}
+					onClose={() =>
+						setNotification({
+							visible: false,
+							message: "",
+							color: "",
+						})
+					}
+					color="bg-green-400"
 				/>
 			)}
 			<div className="bg-white rounded-lg w-11/12 md:w-2/3 p-2 relative max-h-[90vh] overflow-y-auto pb-8">
