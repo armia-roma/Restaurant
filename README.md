@@ -13,16 +13,16 @@ Follow these steps to get your project up and running:
 git clone https://github.com/armia-roma/Restaurant.git
 ```
 
-2. **Install dependencies:**
-
-```bash
-npm install
-```
-
-3. **Navigate to the project directory:**
+2. **Navigate to the project directory:**
 
 ```bash
 cd Restaurant
+```
+
+3. **Install dependencies:**
+
+```bash
+npm install
 ```
 
 4. **Run the application: **
