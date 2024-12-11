@@ -1,7 +1,9 @@
 import {FaCartShopping} from "react-icons/fa6";
 import {MdArrowBackIos} from "react-icons/md";
 import {useNavigate} from "react-router-dom";
+import {useCart} from "../contexts/CartContext";
 export default function Nav() {
+	const {cart} = useCart();
 	const navigate = useNavigate();
 	const handleBackClick = () => {
 		navigate(-1); // This goes back to the previous page in history
@@ -26,7 +28,7 @@ export default function Nav() {
 
 				<div className="relative inline-block">
 					<span className="absolute -top-3 -right-2 text-white bg-blue-900 text-xs text-[13px] rounded-full w-4 h-4 flex items-center justify-center">
-						3
+						{cart.count}
 					</span>
 					<div className=" text-blue-900">
 						<FaCartShopping />
