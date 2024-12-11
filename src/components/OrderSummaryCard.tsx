@@ -1,10 +1,14 @@
+import {useCart} from "./../contexts/CartContext.tsx";
+
 export default function OrderSummaryCard() {
+	const {cart} = useCart();
+
 	return (
 		<div className="fixed flex flex-col bottom-0 left-0 right-0 h-20 bg-white rounded-t-lg">
 			<div className="flex items-center justify-between px-4 py-1 bg-blue-900 rounded-t-lg ">
 				<div className="flex items-center space-x-2">
 					<div className=" flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-800 font-semibold rounded-md">
-						3
+						{cart.count}
 					</div>
 
 					<div className="text-sm font-medium text-white cursor-pointer">
@@ -13,7 +17,7 @@ export default function OrderSummaryCard() {
 				</div>
 
 				<div className="text-lg font-semibold  text-white">
-					<span>0</span> <span>AED</span>
+					<span>{cart.price}</span> <span>AED</span>
 				</div>
 			</div>
 

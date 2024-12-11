@@ -8,6 +8,7 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import CategoriesListPage from "./pages/CategoriesListPage.tsx";
 import ItemListPage from "./pages/ItemListPage.tsx";
 import App from "./App.tsx";
+import {CartProvider} from "./contexts/CartContext.tsx";
 const router = createBrowserRouter([
 	{
 		path: "/",
@@ -32,8 +33,10 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<FormProvider>
-			<RouterProvider router={router} />
-		</FormProvider>
+		<CartProvider>
+			<FormProvider>
+				<RouterProvider router={router} />
+			</FormProvider>
+		</CartProvider>
 	</StrictMode>
 );

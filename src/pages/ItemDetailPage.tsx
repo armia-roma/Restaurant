@@ -7,6 +7,7 @@ import AddToCard from "../components/AddToCard";
 import {useFormContext} from "../contexts/FormContext";
 import {useAddToCart} from "../hooks/useAddToCart";
 import Notification from "../components/Notification.tsx";
+import {useCart} from "./../contexts/CartContext.tsx";
 interface Props {
 	isVisible: boolean;
 	onClose: () => void;
@@ -30,6 +31,7 @@ export default function ItemDetailPage({
 		message: "",
 		color: "",
 	});
+	const {updateCart} = useCart();
 	const handleAddToCartExecute = async () => {
 		try {
 			const response = await handleAddToCart();
@@ -38,6 +40,7 @@ export default function ItemDetailPage({
 				visible: true,
 				color: "bg-green-400",
 			});
+			updateCart(response?.data.data);
 		} catch (error) {
 			onAddToCart({message: error, visible: true});
 		}
