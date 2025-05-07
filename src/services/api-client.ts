@@ -1,8 +1,7 @@
 import axios from "axios";
-
+const apiKey = import.meta.env.VITE_API_BASE_URL;
 const apiClient = axios.create({
-	baseURL:
-		"https://stg.tdh.start-tech.ae/api/8661e1bc-87d4-11ef-ba55-0050563f7167",
+	baseURL: `${apiKey}`,
 });
 
 export default apiClient;
