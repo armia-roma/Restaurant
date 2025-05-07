@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import apiClient, { RESTAURANT_ID } from "../services/api-client";
-import { handleApiError } from "../utilities/errorHandler";
 import { Item } from "../pages/ItemListPage";
 
 interface UseItemsReturn {

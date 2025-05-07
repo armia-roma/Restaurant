@@ -1,8 +1,3 @@
-interface ApiError {
-	message: string;
-	status?: number;
-}
-
 interface ErrorResponse {
 	message: string;
 	visible: boolean;

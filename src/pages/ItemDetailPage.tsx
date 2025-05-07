@@ -1,13 +1,13 @@
-import {Item, Notification as NotificationType} from "../pages/ItemListPage";
+import { Item, Notification as NotificationType } from "../pages/ItemListPage";
 import ExtraOption from "../components/ExtraOption";
-import {RiCloseCircleLine} from "react-icons/ri";
-import {useEffect, useState} from "react";
+import { RiCloseCircleLine } from "react-icons/ri";
+import { useEffect, useState } from "react";
 import ItemQuantity from "../components/ItemQuantity";
 import AddToCard from "../components/AddToCard";
-import {useFormContext} from "../contexts/FormContext";
-import {useAddToCart} from "../hooks/useAddToCart";
+import { useFormContext } from "../contexts/FormContext";
+import { useAddToCart } from "../hooks/useAddToCart";
 import Notification from "../components/Notification.tsx";
-import {useCart} from "./../contexts/CartContext.tsx";
+import { useCart } from "./../contexts/CartContext.tsx";
 interface Props {
 	isVisible: boolean;
 	onClose: () => void;
@@ -24,14 +24,14 @@ export default function ItemDetailPage({
 	if (!isVisible || !item) return null;
 
 	const [totalPrice, setTotalPrice] = useState(item.price);
-	const {form, updateForm} = useFormContext();
-	const {handleAddToCart, isLoading, error} = useAddToCart();
+	const { form, updateForm } = useFormContext();
+	const { handleAddToCart } = useAddToCart();
 	const [notification, setNotification] = useState<NotificationType>({
 		visible: false,
 		message: "",
 		color: "",
 	});
-	const {updateCart} = useCart();
+	const { updateCart } = useCart();
 	const handleAddToCartExecute = async () => {
 		try {
 			const response = await handleAddToCart();
@@ -42,21 +42,28 @@ export default function ItemDetailPage({
 			});
 			updateCart(response?.data.data);
 		} catch (error) {
-			onAddToCart({message: error, visible: true});
+			if (error instanceof Error) {
+				onAddToCart({
+					message: error.message,
+					visible: true,
+					color: "bg-red-400",
+				});
+			}
 		}
 	};
 	useEffect(() => {
-		updateForm({item_id: item.id});
+		updateForm({ item_id: item.id });
 		const basePrice = item.price * (form.quantity || 0);
 		let totalExtrasPrice = 0;
 		form.extras.forEach((extra) => {
+			console.log(extra, "extra");
 			let matchingExtra = item.extrasWithOptions.find(
-				(extraOption) => extraOption.extra_id === extra.extraId
+				(extraOption) => extraOption.extra_id === extra.extra_id
 			);
 
 			if (matchingExtra) {
 				let matchingOption = matchingExtra.option.find(
-					(option) => option.id === extra.optionid
+					(option) => option.id === extra.option_id
 				);
 
 				if (matchingOption?.option_has_price) {

@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import Fuse from "fuse.js";
 import CategoryCard from "../components/CategoryCard";
-import {RESTAURANT_ID} from "../services/api-client";
-import {fetchCategories} from "../services/categoriesService";
+import { RESTAURANT_ID } from "../services/api-client";
+import { fetchCategories } from "../services/categoriesService";
 import CategorySkeletonLoader from "./../components/CategorySkeletonLoader";
 export interface Category {
 	id: number;
@@ -22,7 +22,11 @@ export default function CategoriesListPage() {
 
 	const [filterList, setFilterList] = useState<typeof categories>(categories);
 
-	const [error, setError] = useState({message: "", visible: false, type: ""});
+	const [error, setError] = useState({
+		message: "",
+		visible: false,
+		type: "",
+	});
 
 	const fetchAndSetCategories = async () => {
 		setIsLoading(true);
@@ -30,9 +34,15 @@ export default function CategoriesListPage() {
 			const categoryList = await fetchCategories(RESTAURANT_ID);
 			setCategories(categoryList);
 			setFilterList(categoryList);
-			setError({message: "", visible: false, type: ""});
+			setError({ message: "", visible: false, type: "" });
 		} catch (err) {
-			setError({message: err.message, visible: true, type: ""});
+			if (err instanceof Error) {
+				setError((prev) => ({
+					...prev,
+					visible: true,
+					message: err.message,
+				}));
+			}
 		} finally {
 			setIsLoading(false);
 		}
@@ -40,7 +50,7 @@ export default function CategoriesListPage() {
 	useEffect(() => {
 		fetchAndSetCategories();
 	}, []);
-	const fuse = new Fuse(categories, {keys: ["name"], threshold: 0.5});
+	const fuse = new Fuse(categories, { keys: ["name"], threshold: 0.5 });
 
 	const handleSearch = (searchQuery: string): void => {
 		setFilterList(
@@ -61,10 +71,10 @@ export default function CategoriesListPage() {
 
 			<div className="flex flex-wrap">
 				{isLoading ? (
-					Array.from({length: 6}, (_, index) => (
+					Array.from({ length: 6 }, (_, index) => (
 						<CategorySkeletonLoader key={index} />
 					))
-				) : categories.length == 0 ? (
+				) : categories.length == 0 && !error.visible ? (
 					<div className="bg-gray-50 flex justify-center items-center h-full w-full">
 						<div className="text-center text-lg text-gray-500">
 							No categories available.
