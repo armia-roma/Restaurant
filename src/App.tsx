@@ -1,6 +1,6 @@
-import {Link, Outlet} from "react-router-dom";
+import { Link } from "react-router-dom";
 import Nav from "./components/Nav";
-import {useState} from "react";
+
 function App() {
 	return (
 		<>

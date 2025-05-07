@@ -1,11 +1,11 @@
-import {useEffect, useState, useContext} from "react";
-import apiClient, {RESTAURANT_ID} from "../services/api-client";
-import {handleApiError} from "../utilities/errorHandler";
-import {Item} from "../pages/ItemListPage";
+import { useEffect, useState } from "react";
+import apiClient, { RESTAURANT_ID } from "../services/api-client";
+import { handleApiError } from "../utilities/errorHandler";
+import { Item } from "../pages/ItemListPage";
 
 interface UseItemsReturn {
 	items: Item[];
-	error: {message: string; visible: boolean; type: string};
+	error: { message: string; visible: boolean; type: string };
 	isLoading: boolean;
 	fetchItems: (categoryId?: string | number) => void;
 }
@@ -26,16 +26,21 @@ export const useItems = (
 			const response = await apiClient.get(
 				`/restaurant/${RESTAURANT_ID}`,
 				{
-					params: categoryId ? {cat: categoryId} : {},
+					params: categoryId ? { cat: categoryId } : {},
 				}
 			);
-			const {data} = response.data;
+			const { data } = response.data;
 			setItems(data.items.data);
 
-			setError({message: "", visible: false, type: ""});
+			setError({ message: "", visible: false, type: "" });
 		} catch (catchError) {
-			const apiError = handleApiError(catchError);
-			setError(apiError);
+			if (catchError instanceof Error) {
+				setError((err) => ({
+					...err,
+					visible: true,
+					message: catchError.message,
+				}));
+			}
 		} finally {
 			setIsLoading(false);
 		}
@@ -46,5 +51,5 @@ export const useItems = (
 		}
 	}, [initialCategoryId]);
 
-	return {items, fetchItems, isLoading, error};
+	return { items, fetchItems, isLoading, error };
 };
